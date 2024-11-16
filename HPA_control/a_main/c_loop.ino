@@ -11,13 +11,13 @@ void loop() {
   Serial.println();
 }*/
 
-  if (WiFi.status() != WL_CONNECTED && millis() - LastShot >= Settings.TimeLastShot * 60000 && LS == 1) { //&& millis() - LastShot > Settings.TimeLastShot * 6000   WiFi.status() != WL_CONNECTED
-      WR.WriteCount++;
-      mem2.update();
-      LS = 0;
-    }
+  if (WiFi.status() != WL_CONNECTED && millis() - LastShot >= Settings.TimeLastShot * 60000 && LS == 1) {
+    WR.WriteCount++;
+    mem2.update();
+    LS = 0;
+  }
 
-  if (millis() - VoltTime > 5000) {
+  if (millis() - VoltTime > 5000) { //проверка напряжения
     Volt();
   }
 
