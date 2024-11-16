@@ -1,6 +1,6 @@
 void setup() {
   Serial.begin(115200);
-  if (digitalRead(FireModeSw) == HIGH) {
+  if (digitalRead(FireModeSw) == HIGH) {  //если переключатель режимов нажат то запускается wifi
   WiFi.mode(WIFI_STA);
   //WiFi.mode(WIFI_AP);
   WiFi.begin(AP_SSID, AP_PASS);
@@ -33,6 +33,7 @@ void setup() {
   //   Serial.write(EEPROM.read(i));
   // Serial.println();
 
+  //назначаем пины
   pinMode(solPin, OUTPUT);
   pinMode(TrigPin, INPUT);
   pinMode(FireModeSw, INPUT);
