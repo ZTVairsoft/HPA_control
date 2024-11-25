@@ -4,6 +4,7 @@ void loop() {
   // if (memory.tick()) Serial.println("Updated!");
   mem1.tick();
   mem2.tick();
+  mem3.tick();
 
   /*if (millis() - VoltTime > 5000){
   for (uint16_t i = memory.startAddr(); i < memory.endAddr() + 1; i++)
