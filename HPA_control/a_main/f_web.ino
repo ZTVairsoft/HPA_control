@@ -62,14 +62,7 @@ void build() {
 
     M_SPOILER(
       "Сброс",
-      GP.BUTTON_MINI("btnS", "Сброс настроек");
-      GP.TEXT("ssd", "text", WF.WF_SSID);
-      GP.BREAK();
-      GP.TEXT("pass", "pass", WF.WF_PASS);
-      GP.BREAK();
-      GP.BUTTON("WFbtn", "Сохранить");
-      GP.BREAK();
-      GP.BUTTON_MINI("WFRbtn", "Сброс Wi-fi"););
+      GP.BUTTON_MINI("btnS", "Сброс настроек"););
 
   } else if (ui.uri("/settings")) {
     M_BLOCK_THIN_TAB(
@@ -86,6 +79,15 @@ void build() {
       GP.LABEL("NAN", "pr");
       GP.LABEL("%");
       GP.BREAK(););
+
+    
+      GP.TEXT("ssd", "text", WF.WF_SSID);
+      GP.BREAK();
+      GP.TEXT("pass", "pass", WF.WF_PASS);
+      GP.BREAK();
+      GP.BUTTON("WFbtn", "Сохранить");
+      GP.BREAK();
+      GP.BUTTON_MINI("WFRbtn", "Сброс Wi-fi");
 
 
 

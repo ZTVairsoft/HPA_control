@@ -19,7 +19,7 @@ void setup() {
     Serial.println(WF.WF_SSID);
     Serial.println(WF.WF_PASS);
     Serial.println(WF.apply);
-  } else {
+  } else if(digitalRead(FireModeSw) == HIGH) {
     WiFi.mode(WIFI_AP);
     WiFi.softAP(WF.WF_SSID, WF.WF_PASS);
     //WiFi.softAP(WF.WF_SSID);
