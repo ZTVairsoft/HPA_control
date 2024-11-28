@@ -25,7 +25,8 @@ void setup() {
     //WiFi.softAP(WF.WF_SSID);
     Serial.print("AP: ");
     Serial.println(WiFi.softAPIP());
-  }
+  } else {WiFi.mode(WIFI_OFF);}
+
 
 
   // подключаем конструктор и запускаем
