@@ -13,7 +13,7 @@ void build() {
 
   GP.UI_BODY();
 
-  GP.UPDATE("rof,cof,vol,pr,vo,vc,vd,vi,volcor,btn,cow,sf,sa,na,OV,R1,R2,TrSl");
+  GP.UPDATE("rof,cof,vol,pr,vo,vc,vd,vi,volcor,btn,cow,sf,sa,na,OV,R1,R2,TrSl,led1,led2,led3");
 
   GP.TITLE("ZTV ВВД v.2.0");
   GP.HR();
@@ -37,7 +37,11 @@ void build() {
       M_BOX(GP.SWITCH("CvSf", Settings.ConvSafe); GP.LABEL("инверт. предохранитель"););
       M_BOX(GP.SWITCH("TWF", Settings.Double_Shot); GP.LABEL("двойной спуск для CQB"););
       GP.BREAK();
-    );
+      M_SPOILER(
+        "Состояние кнопок",
+        M_BOX(GP.LED("led1"); GP.LABEL("предохранитель: "); GP.BREAK(););
+        M_BOX(GP.LED("led2"); GP.LABEL("режим огня: "); GP.BREAK(););
+        M_BOX(GP.LED("led3"); GP.LABEL("спуск. крючек: "); GP.BREAK(););););
 
     M_BLOCK_THIN_TAB(
       "Ограничения",
@@ -53,7 +57,7 @@ void build() {
       GP.LABEL("Кол-во записей: ");
       GP.LABEL("NAN", "cow"); GP.BREAK(););
 
-      M_BLOCK_THIN_TAB(
+    M_BLOCK_THIN_TAB(
       "Питание трассерного Hop-up",
       GP.SWITCH("TrSw", Settings.tracer);
       GP.BREAK();
@@ -94,14 +98,14 @@ void build() {
       GP.LABEL("%");
       GP.BREAK(););
 
-    
-      GP.TEXT("ssd", "text", WF.WF_SSID);
-      GP.BREAK();
-      GP.TEXT("pass", "pass", WF.WF_PASS);
-      GP.BREAK();
-      GP.BUTTON("WFbtn", "Сохранить");
-      GP.BREAK();
-      GP.BUTTON_MINI("WFRbtn", "Сброс Wi-fi");
+
+    GP.TEXT("ssd", "text", WF.WF_SSID);
+    GP.BREAK();
+    GP.TEXT("pass", "pass", WF.WF_PASS);
+    GP.BREAK();
+    GP.BUTTON("WFbtn", "Сохранить");
+    GP.BREAK();
+    GP.BUTTON_MINI("WFRbtn", "Сброс Wi-fi");
 
 
 
@@ -240,5 +244,11 @@ void action() {
     if (ui.update("sa")) ui.answer(Settings.NumOfShotsAuto);
 
     if (ui.update("na")) ui.answer(Settings.TimeLastShot);
+
+    if (ui.update("led1")) ui.answer(FlagSafe);
+
+    if (ui.update("led2")) ui.answer(firemode);
+
+    if (ui.update("led3")) ui.answer(trig);
   }
 }

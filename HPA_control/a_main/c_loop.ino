@@ -1,5 +1,4 @@
 void loop() {
-  bool FlagSafe;  //флаг предохранителя
   ui.tick();
 
   // if (memory.tick()) Serial.println("Updated!");
@@ -35,14 +34,18 @@ void loop() {
   if (Settings.ConvSel == 0) {
     if (digitalRead(FireModeSw) == HIGH) {        //переключатель огня нажат
       Mode1 = 2;                                  //режим очереди
+      firemode = true;                            //нажат
     } else if (digitalRead(FireModeSw) == LOW) {  //переключатель огня не нажат
       Mode1 = 1;                                  //режим одиночки
+      firemode = false;                           //отжат
     }
   } else {
     if (digitalRead(FireModeSw) == HIGH) {        //переключатель огня нажат
       Mode1 = 1;                                  //режим одиночки
+      firemode = false;                           //отжат
     } else if (digitalRead(FireModeSw) == LOW) {  //переключатель огня не нажат
       Mode1 = 2;                                  //режим очереди
+      firemode = true;                            //нажат
     }
   }
 
@@ -51,6 +54,10 @@ void loop() {
   } else {
     FlagSafe = false;
   }
+
+  if (digitalRead(TrigPin) == HIGH){
+    trig = true;
+  }else{trig = false;}
 
   if (digitalRead(TrigPin) == HIGH && Settings.ConvTrig == false && FlagSafe == false || digitalRead(TrigPin) == LOW && Settings.ConvTrig == true && FlagSafe == false) {  //проверка нажатия на спуск
     if (Settings.Mode2 == 0) {                                                                                                                                             //Автомат
