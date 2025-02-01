@@ -1,6 +1,6 @@
 void setup() {
   Serial.begin(115200);
-  
+
   EEPROM.begin(1024);
 
   mem1.begin(0, 'a');
@@ -19,13 +19,16 @@ void setup() {
     Serial.println(WF.WF_SSID);
     Serial.println(WF.WF_PASS);
     Serial.println(WF.apply);
-  } else if(digitalRead(FireModeSw) == HIGH) {
+  } else if (digitalRead(FireModeSw) == HIGH) {
     WiFi.mode(WIFI_AP);
+    WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
     WiFi.softAP(WF.WF_SSID, WF.WF_PASS);
     //WiFi.softAP(WF.WF_SSID);
     Serial.print("AP: ");
     Serial.println(WiFi.softAPIP());
-  } else {WiFi.mode(WIFI_OFF);}
+  } else {
+    WiFi.mode(WIFI_OFF);
+  }
 
 
 
@@ -50,4 +53,9 @@ void setup() {
   pinMode(TrigPin, INPUT);
   pinMode(FireModeSw, INPUT);
   pinMode(ExtraPin, OUTPUT);
+  pinMode(ProgSafe, INPUT);
+
+  if (Settings.tracer == 1) {
+    digitalWrite(ExtraPin, HIGH);
+  }
 }
