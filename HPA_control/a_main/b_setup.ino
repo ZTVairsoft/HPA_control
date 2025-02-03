@@ -7,6 +7,8 @@ void setup() {
   mem2.begin(mem1.nextAddr(), 'a');
   mem3.begin(mem2.nextAddr(), 'a');
 
+  delay(500); //задержка для выхода из сна, можно успеть переключить переключатель огня что бы не включился Wi-Fi
+
   if (digitalRead(FireModeSw) == HIGH && WF.apply == 0) {  //если переключатель режимов нажат то запускается wifi
     WiFi.mode(WIFI_STA);
     WiFi.begin(AP_SSID, AP_PASS);

@@ -18,50 +18,53 @@ void loop() {
     LS = 0;
   }
 
-  if (millis() - VoltTime > 5000) {  //проверка напряжения
-    Volt();
-  }
 
-  if (Settings.tracer == 1 && LSTr == 0 && Settings.tracTime * 1000 <= millis()) {  //Выключение трассерки после включения
+  if (Settings.tracer == 1 && LSTr == 0 && Settings.tracTime * 1000 <= millis()) {  //Выключение трассерки после включения через заданное время
     digitalWrite(ExtraPin, LOW);
   }
 
-  if (Settings.tracer == 1 && LSTr == 1 && TracLastShot + (Settings.tracTime * 1000) <= millis()) {  //ВЫключение трассерки после заданного времени
+  if (Settings.tracer == 1 && LSTr == 1 && TracLastShot + (Settings.tracTime * 1000) <= millis()) {  //ВЫключение трассерки после заданного времени после выстрела
     digitalWrite(ExtraPin, LOW);
     LSTr = 0;
   }
 
-  if (Settings.ConvSel == 0) {
-    if (digitalRead(FireModeSw) == HIGH) {        //переключатель огня нажат
-      Mode1 = 2;                                  //режим очереди
-      firemode = true;                            //нажат
-    } else if (digitalRead(FireModeSw) == LOW) {  //переключатель огня не нажат
-      Mode1 = 1;                                  //режим одиночки
-      firemode = false;                           //отжат
-    }
-  } else {
-    if (digitalRead(FireModeSw) == HIGH) {        //переключатель огня нажат
-      Mode1 = 1;                                  //режим одиночки
-      firemode = false;                           //отжат
-    } else if (digitalRead(FireModeSw) == LOW) {  //переключатель огня не нажат
-      Mode1 = 2;                                  //режим очереди
-      firemode = true;                            //нажат
-    }
+  if (millis() - VoltTime > 5000) {  //проверка напряжения
+    Volt();
   }
 
-  if (Settings.ConvSafe == false && digitalRead(ProgSafe) == HIGH || Settings.ConvSafe == true && digitalRead(ProgSafe) == LOW) {  //проверка предохранителя
-    FlagSafe = true;
-  } else {
-    FlagSafe = false;
+  triggerState = digitalRead(TrigPin) ^ Settings.ConvTrig;
+  safetyState = digitalRead(ProgSafe) ^ Settings.ConvSafe;
+  autoModeState = digitalRead(FireModeSw) ^ Settings.ConvSel;
+
+  deepSleepTime = Settings.deepSleepMin * 1000 * 60;
+
+  if (autoModeState == true) {
+    Mode1 = 2;
+  } else if (autoModeState == false) {
+    Mode1 = 1;
   }
 
-  if (digitalRead(TrigPin) == HIGH){
+  if (safetyState == true) {
+    // Если предохранитель нажат, соленоид отключен
+    digitalWrite(solPin, LOW);
+    return;
+  }
+
+  if (digitalRead(TrigPin) == HIGH) {
     trig = true;
-  }else{trig = false;}
+  } else {
+    trig = false;
+  }
 
-  if (digitalRead(TrigPin) == HIGH && Settings.ConvTrig == false && FlagSafe == false || digitalRead(TrigPin) == LOW && Settings.ConvTrig == true && FlagSafe == false) {  //проверка нажатия на спуск
-    if (Settings.Mode2 == 0) {                                                                                                                                             //Автомат
-      if (Mode1 == 1) {                                                                                                                                                    //если стоит на одиночке то
+  if (millis() - LastShot >= deepSleepTime) {
+    // Переход в глубокий сон
+    Serial.println("сон");
+    enterDeepSleep();
+  }
+
+  if (triggerState == true) {  //проверка нажатия на спуск
+    if (Settings.Mode2 == 0) { //Автомат
+      if (Mode1 == 1) {         //если стоит на одиночке то
         SingleShot();
       } else if (Mode1 == 2 && Settings.NumOfShotsSemi > 0) {  //или стоит на очереди
         ShortShot();

@@ -8,12 +8,13 @@ void build() {
 
   GP.UI_MENU("Меню", GP_RED);  // начать меню
   GP.UI_LINK("/", "Домашняя страница");
-  GP.UI_LINK("/settings", "Настройки");
+  GP.UI_LINK("/settings", "Дополгительные настройки");
+  GP.UI_LINK("/info", "Информация");
   GP.UI_LINK("/ota_update", "Обновление");
 
   GP.UI_BODY();
 
-  GP.UPDATE("rof,cof,vol,pr,vo,vc,vd,vi,volcor,btn,cow,sf,sa,na,OV,R1,R2,TrSl,led1,led2,led3");
+  GP.UPDATE("rof,cof,vol,pr,vo,vc,vd,vi,volcor,btn,cow,sf,sa,na,OV,R1,R2,TrSl,DSSl,DSTr,led1,led2,led3");
 
   GP.TITLE("ZTV ВВД v.2.0");
   GP.HR();
@@ -64,6 +65,14 @@ void build() {
       GP.LABEL("Сек. до откл. подсветки");
       M_BOX(GP.LABEL(""); GP.SLIDER("TrSl", Settings.tracTime, 1, 5););
       GP.BREAK(););
+
+    M_BLOCK_THIN_TAB(
+      "Автоотключение",
+      GP.SWITCH("DSTr", Settings.deepSleep);
+      GP.BREAK();
+      GP.LABEL("Минут до отключения");
+      M_BOX(GP.LABEL(""); GP.SLIDER("DSSl", Settings.deepSleepMin, 1, 300););
+      GP.BREAK(););
     // GP.LABEL("коррект. напр.");
     // GP.SPINNER("volcor", Settings.VoltCorr);
     // GP.BREAK();
@@ -109,8 +118,27 @@ void build() {
 
 
 
+  }else if(ui.uri("/info")){
+    GP.LABEL("Магазин");
+    GP.BREAK();
+    GP.UI_LINK("https://vk.com/ztv_airsoft","VK магазин");
+    GP.BREAK();
+    GP.BREAK();
+    GP.LABEL("Дополнительные материалы");
+    GP.BREAK();
+    GP.UI_LINK("https://boosty.to/ztv","Boosty");
+    GP.BREAK();
+    GP.BREAK();
+    GP.LABEL("Последние прошивки");
+    GP.BREAK();
+    GP.UI_LINK("https://github.com/ZTVairsoft/HPA_control", "GitHub");
+    GP.BREAK();
+    GP.BREAK();
+    GP.LABEL("Последние релизы");
+    GP.BREAK();
+    GP.UI_LINK("https://github.com/ZTVairsoft/HPA_control", "Релизы BIN");
 
-  } else if (ui.uri("/update")) {
+  }else if (ui.uri("/update")) {
   }
 
   GP.UI_END();
@@ -152,6 +180,9 @@ void action() {
     if (ui.clickBool("TrSw", Settings.tracer)) {
     }
 
+    if (ui.clickBool("DSTr", Settings.deepSleep)) {
+    }
+
     if (ui.clickBool("CvTr", Settings.ConvTrig)) {
     }
 
@@ -165,6 +196,9 @@ void action() {
     }
 
     if (ui.clickInt("TrSl", Settings.tracTime)) {
+    }
+
+    if (ui.clickInt("DSSl", Settings.deepSleepMin)) {
     }
 
     if (ui.clickInt("volcor", Settings.VoltCorr)) {
@@ -245,10 +279,10 @@ void action() {
 
     if (ui.update("na")) ui.answer(Settings.TimeLastShot);
 
-    if (ui.update("led1")) ui.answer(FlagSafe);
+    if (ui.update("led1")) ui.answer(safetyState);
 
-    if (ui.update("led2")) ui.answer(firemode);
+    if (ui.update("led2")) ui.answer(autoModeState);
 
-    if (ui.update("led3")) ui.answer(trig);
+    if (ui.update("led3")) ui.answer(triggerState);
   }
 }
