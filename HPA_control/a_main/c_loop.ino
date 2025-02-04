@@ -50,13 +50,7 @@ void loop() {
     return;
   }
 
-  if (digitalRead(TrigPin) == HIGH) {
-    trig = true;
-  } else {
-    trig = false;
-  }
-
-  if (millis() - LastShot >= deepSleepTime) {
+  if (millis() - LastShot >= deepSleepTime || batSafeFlag == true) {
     // Переход в глубокий сон
     Serial.println("сон");
     enterDeepSleep();

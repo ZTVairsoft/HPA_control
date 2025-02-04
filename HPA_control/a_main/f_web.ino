@@ -67,7 +67,7 @@ void build() {
       GP.BREAK(););
 
     M_BLOCK_THIN_TAB(
-      "Автоотключение",
+      "Автоотключение при бездействии",
       GP.SWITCH("DSTr", Settings.deepSleep);
       GP.BREAK();
       GP.LABEL("Минут до отключения");
@@ -92,6 +92,8 @@ void build() {
       GP.BUTTON_MINI("btnS", "Сброс настроек"););
 
   } else if (ui.uri("/settings")) {
+    M_BOX(GP.LABEL("Аккумулятор"); GP.SELECT("bt", "2S-8.4В,3S-12.6В", Settings.batType); GP.BREAK(););
+    M_BOX(GP.SWITCH("BS", Settings.batSafe); GP.LABEL("отключение при разряде"););
     M_BLOCK_THIN_TAB(
       "Настройка делителя",
       M_BOX(GP.LABEL("R1"); GP.NUMBER_F("R1", "", Settings.DIV_R1););
@@ -177,6 +179,9 @@ void action() {
     if (ui.clickInt("vi", Settings.Mode2)) {
     }
 
+    if (ui.clickInt("bt", Settings.batType)) {
+    }
+
     if (ui.clickBool("TrSw", Settings.tracer)) {
     }
 
@@ -193,6 +198,9 @@ void action() {
     }
 
     if (ui.clickBool("TWF", Settings.Double_Shot)) {
+    }
+
+    if (ui.clickBool("BS", Settings.batSafe)) {
     }
 
     if (ui.clickInt("TrSl", Settings.tracTime)) {
