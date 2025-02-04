@@ -121,6 +121,9 @@ void build() {
 
 
   }else if(ui.uri("/info")){
+    GP.LABEL("Прошивка v2.1.0");
+    GP.BREAK();
+    GP.BREAK();
     GP.LABEL("Магазин");
     GP.BREAK();
     GP.UI_LINK("https://vk.com/ztv_airsoft","VK магазин");
@@ -138,7 +141,7 @@ void build() {
     GP.BREAK();
     GP.LABEL("Последние релизы");
     GP.BREAK();
-    GP.UI_LINK("https://github.com/ZTVairsoft/HPA_control", "Релизы BIN");
+    GP.UI_LINK("https://github.com/ZTVairsoft/HPA_control/releases", "Релизы BIN");
 
   }else if (ui.uri("/update")) {
   }
