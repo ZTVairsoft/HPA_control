@@ -1,92 +1,67 @@
 void loop() {
   ui.tick();
 
-  // if (memory.tick()) Serial.println("Updated!");
   mem1.tick();
   mem2.tick();
   mem3.tick();
 
-  /*if (millis() - VoltTime > 5000){
-  for (uint16_t i = memory.startAddr(); i < memory.endAddr() + 1; i++)
-    Serial.write(EEPROM.read(i));
-  Serial.println();
-}*/
-
-  if (WiFi.status() != WL_CONNECTED && millis() - LastShot >= Settings.TimeLastShot * 60000 && LS == 1) {  //сохранение настрела если не включен WiFi
-    WR.WriteCount++;
+  if (WiFi.status() != WL_CONNECTED && millis() - lastShot >= Settings.timeLastShot * 60000 && isLS == 1) {  //сохранение настрела если не включен WiFi
+    WR.writeCount++;
     mem2.update();
-    LS = 0;
+    isLS = 0;
   }
 
 
-  if (Settings.tracer == 1 && LSTr == 0 && Settings.tracTime * 1000 <= millis()) {  //Выключение трассерки после включения через заданное время
-    digitalWrite(ExtraPin, LOW);
+  if (Settings.isTracer == 1 && isLSTr == 0 && Settings.tracTime * 1000 <= millis()) {  //Выключение трассерки после включения через заданное время
+    digitalWrite(TRACER, LOW);
   }
 
-  if (Settings.tracer == 1 && LSTr == 1 && TracLastShot + (Settings.tracTime * 1000) <= millis()) {  //ВЫключение трассерки после заданного времени после выстрела
-    digitalWrite(ExtraPin, LOW);
-    LSTr = 0;
+  if (Settings.isTracer == 1 && isLSTr == 1 && tracLastShot + (Settings.tracTime * 1000) <= millis()) {  //ВЫключение трассерки после заданного времени после выстрела
+    digitalWrite(TRACER, LOW);
+    isLSTr = 0;
   }
 
-  if (millis() - VoltTime > 5000) {  //проверка напряжения
+  if (millis() - voltTime > 5000) {  //проверка напряжения
     Volt();
   }
 
-  triggerState = digitalRead(TrigPin) ^ Settings.ConvTrig;
-  safetyState = digitalRead(ProgSafe) ^ Settings.ConvSafe;
-  autoModeState = digitalRead(FireModeSw) ^ Settings.ConvSel;
+  triggerState = digitalRead(TRIGPIN) ^ Settings.convTrig;
+  safetyState = digitalRead(PROGSAFE) ^ Settings.isConvSafe;
+  autoModeState = digitalRead(FIREMODESW) ^ Settings.convSel;
 
-  deepSleepTime = Settings.deepSleepMin * 1000 * 60;
+  deepSleepTime = Settings.deepSleepMin * 1000 * 60;  //время до ухода в сон
 
-  if (autoModeState == true) {
-    Mode1 = 2;
-  } else if (autoModeState == false) {
-    Mode1 = 1;
+  autoMode = autoModeState ? 2 : 1;
+
+  if (millis() - lastShot >= deepSleepTime || isBatSafeFlag == true) {
+    // Переход в глубокий сон
+    Serial.println("сон");  //засыпает и не просыпается зараза
+    enterDeepSleep();
   }
 
   if (safetyState == true) {
     // Если предохранитель нажат, соленоид отключен
-    digitalWrite(solPin, LOW);
+    digitalWrite(SOLPIN, LOW);
     return;
   }
 
-  if (millis() - LastShot >= deepSleepTime || batSafeFlag == true) {
-    // Переход в глубокий сон
-    Serial.println("сон");
-    enterDeepSleep();
-  }
-
   if (triggerState == true) {  //проверка нажатия на спуск
-    if (Settings.Mode2 == 0) { //Автомат
-      if (Mode1 == 1) {         //если стоит на одиночке то
+    switch (Settings.Mode) {
+      case AUTOMODE:  //режим автомата
+        if (autoMode == SEMI) SingleShot();
+        else if (Settings.numOfShotsSemi > 0) ShortShot();
+        else AutoShot();
+        break;
+      case SNIPERMODE:  //режим снайпера
         SingleShot();
-      } else if (Mode1 == 2 && Settings.NumOfShotsSemi > 0) {  //или стоит на очереди
-        ShortShot();
-      } else if (Mode1 == 2) {  //или стоит на очереди
+        break;
+      case CQBMODE:  //режим CQB
+        if (Settings.isDoubleShot) DoubleShot();
+        else SingleShot();
+        break;
+      case MACHINEGUNMODE:  //режим пулемета
         AutoShot();
-      }
-    } else if (Settings.Mode2 == 1) {  //Снайпер
-      if (Mode1 == 1) {                //если стоит на одиночке то
-        SingleShot();
-      } else if (Mode1 == 2) {  //или стоит на очереди
-        SingleShot();
-      }
-    } else if (Settings.Mode2 == 2) {                     //CQB
-      if (Mode1 == 1 && Settings.Double_Shot == false) {  //если стоит на одиночке то
-        SingleShot();
-      } else if (Mode1 == 2 && Settings.Double_Shot == false) {  //или стоит на очереди
-        SingleShot();
-      } else if (Mode1 == 1 && Settings.Double_Shot == true) {  //CQB двойное действие
-        DoubleShot();                                           //если стоит на одиночке то
-      } else if (Mode1 == 2 && Settings.Double_Shot == true) {  //или стоит на очереди
-        DoubleShot();
-      }
-    } else if (Settings.Mode2 == 3) {  //Пулемет
-      if (Mode1 == 1) {                //если стоит на одиночке то
-        AutoShot();
-      } else if (Mode1 == 2) {  //или стоит на очереди
-        AutoShot();
-      }
+        break;
     }
   }
 }

@@ -9,7 +9,7 @@ void setup() {
 
   delay(500); //задержка для выхода из сна, можно успеть переключить переключатель огня что бы не включился Wi-Fi
 
-  if (digitalRead(FireModeSw) == HIGH && WF.apply == 0) {  //если переключатель режимов нажат то запускается wifi
+  if (digitalRead(FIREMODESW) == HIGH && WF.apply == 0) {  //если переключатель режимов нажат то запускается wifi
     WiFi.mode(WIFI_STA);
     WiFi.begin(AP_SSID, AP_PASS);
     while (WiFi.status() != WL_CONNECTED) {
@@ -21,7 +21,7 @@ void setup() {
     Serial.println(WF.WF_SSID);
     Serial.println(WF.WF_PASS);
     Serial.println(WF.apply);
-  } else if (digitalRead(FireModeSw) == HIGH) {
+  } else if (digitalRead(FIREMODESW) == HIGH) {
     WiFi.mode(WIFI_AP);
     WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
     WiFi.softAP(WF.WF_SSID, WF.WF_PASS);
@@ -51,13 +51,14 @@ void setup() {
   // Serial.println();
 
   //назначаем пины
-  pinMode(solPin, OUTPUT);
-  pinMode(TrigPin, INPUT);
-  pinMode(FireModeSw, INPUT);
-  pinMode(ExtraPin, OUTPUT);
-  pinMode(ProgSafe, INPUT);
+  pinMode(SOLPIN, OUTPUT);
+  pinMode(TRIGPIN, INPUT);
+  pinMode(FIREMODESW, INPUT);
+  pinMode(TRACER, OUTPUT);
+  
+  pinMode(PROGSAFE, INPUT);
 
-  if (Settings.tracer == 1) {
-    digitalWrite(ExtraPin, HIGH);
+  if (Settings.isTracer == 1) {
+    digitalWrite(TRACER, HIGH);
   }
 }

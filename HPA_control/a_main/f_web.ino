@@ -8,7 +8,7 @@ void build() {
 
   GP.UI_MENU("Меню", GP_RED);  // начать меню
   GP.UI_LINK("/", "Домашняя страница");
-  GP.UI_LINK("/settings", "Дополгительные настройки");
+  GP.UI_LINK("/settings", "Дополнительные настройки");
   GP.UI_LINK("/info", "Информация");
   GP.UI_LINK("/ota_update", "Обновление");
 
@@ -21,22 +21,22 @@ void build() {
 
   if (ui.uri("/")) {
 
-    M_BOX(GP.LABEL("Режим"); GP.SELECT("vi", "Автомат,Снайпер,CQB режим,Режим пулемета", Settings.Mode2); GP.BREAK(););
+    M_BOX(GP.LABEL("Режим"); GP.SELECT("vi", "Автомат,Снайпер,CQB режим,Режим пулемета", Settings.Mode); GP.BREAK(););
 
     M_BLOCK_THIN_TAB(
       "Скорострельность",
       GP.LABEL("Время открытия клапана");
-      M_BOX(GP.LABEL("мс"); GP.BUTTON_MINI("bkwO", "◄"); GP.SLIDER("vo", Settings.Shot_time, 10, 100); GP.BUTTON_MINI("frwO", "►");); GP.BREAK();
+      M_BOX(GP.LABEL("мс"); GP.BUTTON_MINI("bkwO", "◄"); GP.SLIDER("vo", Settings.shotTime, 10, 100); GP.BUTTON_MINI("frwO", "►");); GP.BREAK();
       GP.LABEL("Время закрытия клапана");
-      M_BOX(GP.LABEL("мс"); GP.BUTTON_MINI("bkwC", "◄"); GP.SLIDER("vc", Settings.Shot_wait, 5, 100); GP.BUTTON_MINI("frwC", "►");); GP.BREAK();
+      M_BOX(GP.LABEL("мс"); GP.BUTTON_MINI("bkwC", "◄"); GP.SLIDER("vc", Settings.shotWait, 5, 100); GP.BUTTON_MINI("frwC", "►");); GP.BREAK();
       GP.LABEL("Время между выстрелами");
-      M_BOX(GP.LABEL("мс"); GP.BUTTON_MINI("bkwD", "◄"); GP.SLIDER("vd", Settings.Shot_delay, 0, 1000); GP.BUTTON_MINI("frwD", "►");); GP.BREAK();
+      M_BOX(GP.LABEL("мс"); GP.BUTTON_MINI("bkwD", "◄"); GP.SLIDER("vd", Settings.shotDelay, 0, 1000); GP.BUTTON_MINI("frwD", "►");); GP.BREAK();
       GP.LABEL("Выстрелов в минуту: ");
       GP.LABEL_BLOCK("NAN", "rof"); GP.BREAK();
-      M_BOX(GP.SWITCH("CvTr", Settings.ConvTrig); GP.LABEL("инверт. спуск"););
-      M_BOX(GP.SWITCH("CvFM", Settings.ConvSel); GP.LABEL("инверт. переключ. огня"););
-      M_BOX(GP.SWITCH("CvSf", Settings.ConvSafe); GP.LABEL("инверт. предохранитель"););
-      M_BOX(GP.SWITCH("TWF", Settings.Double_Shot); GP.LABEL("двойной спуск для CQB"););
+      M_BOX(GP.SWITCH("CvTr", Settings.convTrig); GP.LABEL("инверт. спуск"););
+      M_BOX(GP.SWITCH("CvFM", Settings.convSel); GP.LABEL("инверт. переключ. огня"););
+      M_BOX(GP.SWITCH("CvSf", Settings.isConvSafe); GP.LABEL("инверт. предохранитель"););
+      M_BOX(GP.SWITCH("TWF", Settings.isDoubleShot); GP.LABEL("двойной спуск для CQB"););
       GP.BREAK();
       M_SPOILER(
         "Состояние кнопок",
@@ -47,11 +47,11 @@ void build() {
     M_BLOCK_THIN_TAB(
       "Ограничения",
       GP.LABEL("Кол-во выстрелов при отсечке");
-      M_BOX(GP.LABEL(""); GP.BUTTON_MINI("bkwS", "◄"); GP.SLIDER("sf", Settings.NumOfShotsSemi, 0, 10); GP.BUTTON_MINI("frwS", "►");); GP.BREAK();
+      M_BOX(GP.LABEL(""); GP.BUTTON_MINI("bkwS", "◄"); GP.SLIDER("sf", Settings.numOfShotsSemi, 0, 10); GP.BUTTON_MINI("frwS", "►");); GP.BREAK();
       GP.LABEL("Кол-во выстрелов при авто");
-      M_BOX(GP.LABEL(""); GP.BUTTON_MINI("bkwA", "◄"); GP.SLIDER("sa", Settings.NumOfShotsAuto, 0, 100); GP.BUTTON_MINI("frwA", "►");); GP.BREAK();
+      M_BOX(GP.LABEL(""); GP.BUTTON_MINI("bkwA", "◄"); GP.SLIDER("sa", Settings.numOfShotsAuto, 0, 100); GP.BUTTON_MINI("frwA", "►");); GP.BREAK();
       GP.LABEL("Минут до сохранения настрела");
-      M_BOX(GP.LABEL(""); GP.BUTTON_MINI("bkwT", "◄"); GP.SLIDER("na", Settings.TimeLastShot, 1, 10); GP.BUTTON_MINI("frwT", "►");); GP.BREAK();
+      M_BOX(GP.LABEL(""); GP.BUTTON_MINI("bkwT", "◄"); GP.SLIDER("na", Settings.timeLastShot, 1, 10); GP.BUTTON_MINI("frwT", "►");); GP.BREAK();
 
       GP.LABEL("Настрел: ");
       GP.LABEL("NAN", "cof"); GP.BREAK();
@@ -60,7 +60,7 @@ void build() {
 
     M_BLOCK_THIN_TAB(
       "Питание трассерного Hop-up",
-      GP.SWITCH("TrSw", Settings.tracer);
+      GP.SWITCH("TrSw", Settings.isTracer);
       GP.BREAK();
       GP.LABEL("Сек. до откл. подсветки");
       M_BOX(GP.LABEL(""); GP.SLIDER("TrSl", Settings.tracTime, 1, 5););
@@ -68,13 +68,13 @@ void build() {
 
     M_BLOCK_THIN_TAB(
       "Автоотключение при бездействии",
-      GP.SWITCH("DSTr", Settings.deepSleep);
+      GP.SWITCH("DSTr", Settings.isDeepSleep);
       GP.BREAK();
       GP.LABEL("Минут до отключения");
       M_BOX(GP.LABEL(""); GP.SLIDER("DSSl", Settings.deepSleepMin, 1, 300););
       GP.BREAK(););
     // GP.LABEL("коррект. напр.");
-    // GP.SPINNER("volcor", Settings.VoltCorr);
+    // GP.SPINNER("volcor", Settings.voltCorr);
     // GP.BREAK();
     GP.LABEL("Напряжение: ");
     GP.LABEL("", "vol");
@@ -93,12 +93,12 @@ void build() {
 
   } else if (ui.uri("/settings")) {
     M_BOX(GP.LABEL("Аккумулятор"); GP.SELECT("bt", "2S-8.4В,3S-12.6В", Settings.batType); GP.BREAK(););
-    M_BOX(GP.SWITCH("BS", Settings.batSafe); GP.LABEL("отключение при разряде"););
+    M_BOX(GP.SWITCH("BS", Settings.isBatSafe); GP.LABEL("отключение при разряде"););
     M_BLOCK_THIN_TAB(
       "Настройка делителя",
-      M_BOX(GP.LABEL("R1"); GP.NUMBER_F("R1", "", Settings.DIV_R1););
-      M_BOX(GP.LABEL("R2"); GP.NUMBER_F("R2", "", Settings.DIV_R2););
-      M_BOX(GP.LABEL("Опорное"); GP.NUMBER_F("OV", "", Settings.VoltCorr););
+      M_BOX(GP.LABEL("R1"); GP.NUMBER_F("R1", "", Settings.divR1););
+      M_BOX(GP.LABEL("R2"); GP.NUMBER_F("R2", "", Settings.divR2););
+      M_BOX(GP.LABEL("Опорное"); GP.NUMBER_F("OV", "", Settings.voltCorr););
 
       GP.LABEL("Напряжение: ");
       GP.LABEL("", "vol");
@@ -153,57 +153,57 @@ void build() {
 
 void action() {
   int ROF;
-  if (Settings.Mode2 == 1) {
-    ROF = (1000 / (Settings.Shot_time + Settings.Shot_wait + Settings.Shot_delay)) * 60;
+  if (Settings.Mode == 1) {
+    ROF = (1000 / (Settings.shotTime + Settings.shotWait + Settings.shotDelay)) * 60;
   } else {
-    ROF = (1000 / (Settings.Shot_time + Settings.Shot_wait)) * 60;
+    ROF = (1000 / (Settings.shotTime + Settings.shotWait)) * 60;
   }
 
   if (ui.click()) {
 
-    if (ui.clickInt("vo", Settings.Shot_time)) {
+    if (ui.clickInt("vo", Settings.shotTime)) {
     }
 
-    if (ui.clickInt("vc", Settings.Shot_wait)) {
+    if (ui.clickInt("vc", Settings.shotWait)) {
     }
 
-    if (ui.clickInt("vd", Settings.Shot_delay)) {
+    if (ui.clickInt("vd", Settings.shotDelay)) {
     }
 
-    if (ui.clickInt("sf", Settings.NumOfShotsSemi)) {
+    if (ui.clickInt("sf", Settings.numOfShotsSemi)) {
     }
 
-    if (ui.clickInt("sa", Settings.NumOfShotsAuto)) {
+    if (ui.clickInt("sa", Settings.numOfShotsAuto)) {
     }
 
-    if (ui.clickInt("na", Settings.TimeLastShot)) {
+    if (ui.clickInt("na", Settings.timeLastShot)) {
     }
 
-    if (ui.clickInt("vi", Settings.Mode2)) {
+    if (ui.clickInt("vi", Settings.Mode)) {
     }
 
     if (ui.clickInt("bt", Settings.batType)) {
     }
 
-    if (ui.clickBool("TrSw", Settings.tracer)) {
+    if (ui.clickBool("TrSw", Settings.isTracer)) {
     }
 
-    if (ui.clickBool("DSTr", Settings.deepSleep)) {
+    if (ui.clickBool("DSTr", Settings.isDeepSleep)) {
     }
 
-    if (ui.clickBool("CvTr", Settings.ConvTrig)) {
+    if (ui.clickBool("CvTr", Settings.convTrig)) {
     }
 
-    if (ui.clickBool("CvFM", Settings.ConvSel)) {
+    if (ui.clickBool("CvFM", Settings.convSel)) {
     }
 
-    if (ui.clickBool("CvSf", Settings.ConvSafe)) {
+    if (ui.clickBool("CvSf", Settings.isConvSafe)) {
     }
 
-    if (ui.clickBool("TWF", Settings.Double_Shot)) {
+    if (ui.clickBool("TWF", Settings.isDoubleShot)) {
     }
 
-    if (ui.clickBool("BS", Settings.batSafe)) {
+    if (ui.clickBool("BS", Settings.isBatSafe)) {
     }
 
     if (ui.clickInt("TrSl", Settings.tracTime)) {
@@ -212,17 +212,17 @@ void action() {
     if (ui.clickInt("DSSl", Settings.deepSleepMin)) {
     }
 
-    if (ui.clickInt("volcor", Settings.VoltCorr)) {
+    if (ui.clickInt("volcor", Settings.voltCorr)) {
     }
 
     if (ui.click("btn")) {
-      WR.WriteCount++;
+      WR.writeCount++;
       mem1.updateNow();  // обновить сейчас
       mem2.updateNow();
       Serial.println("Изменения сохранены");
     }
     if (ui.click("WFbtn")) {
-      WR.WriteCount++;
+      WR.writeCount++;
       Serial.println(WF.WF_SSID);
       Serial.println(WF.WF_PASS);
       Serial.println(WF.apply);
@@ -234,7 +234,7 @@ void action() {
     }
 
     if (ui.click("WFRbtn")) {
-      WR.WriteCount++;
+      WR.writeCount++;
       mem2.updateNow();  // обновить сейчас
       Serial.println("Сброс Wi-Fi");
       mem3.reset();  // Сброс настроек
@@ -247,23 +247,23 @@ void action() {
       ESP.restart();
     }
 
-    if (ui.click("bkwO")) Settings.Shot_time--;
-    if (ui.click("bkwC")) Settings.Shot_wait--;
-    if (ui.click("bkwS")) Settings.NumOfShotsSemi--;
-    if (ui.click("bkwA")) Settings.NumOfShotsAuto--;
-    if (ui.click("bkwT")) Settings.TimeLastShot--;
-    if (ui.click("bkwD")) Settings.Shot_delay--;
+    if (ui.click("bkwO")) Settings.shotTime--;
+    if (ui.click("bkwC")) Settings.shotWait--;
+    if (ui.click("bkwS")) Settings.numOfShotsSemi--;
+    if (ui.click("bkwA")) Settings.numOfShotsAuto--;
+    if (ui.click("bkwT")) Settings.timeLastShot--;
+    if (ui.click("bkwD")) Settings.shotDelay--;
 
-    if (ui.click("frwO")) Settings.Shot_time++;
-    if (ui.click("frwC")) Settings.Shot_wait++;
-    if (ui.click("frwS")) Settings.NumOfShotsSemi++;
-    if (ui.click("frwA")) Settings.NumOfShotsAuto++;
-    if (ui.click("frwT")) Settings.TimeLastShot++;
-    if (ui.click("frwD")) Settings.Shot_delay++;
+    if (ui.click("frwO")) Settings.shotTime++;
+    if (ui.click("frwC")) Settings.shotWait++;
+    if (ui.click("frwS")) Settings.numOfShotsSemi++;
+    if (ui.click("frwA")) Settings.numOfShotsAuto++;
+    if (ui.click("frwT")) Settings.timeLastShot++;
+    if (ui.click("frwD")) Settings.shotDelay++;
 
-    if (ui.clickFloat("R1", Settings.DIV_R1)) {}
-    if (ui.clickFloat("R2", Settings.DIV_R2)) {}
-    if (ui.clickFloat("OV", Settings.VoltCorr)) {}
+    if (ui.clickFloat("R1", Settings.divR1)) {}
+    if (ui.clickFloat("R2", Settings.divR2)) {}
+    if (ui.clickFloat("OV", Settings.voltCorr)) {}
 
     if (ui.clickString("ssd", WF.WF_SSID)) {}
     if (ui.clickString("pass", WF.WF_PASS)) {}
@@ -272,23 +272,23 @@ void action() {
 
     if (ui.update("rof")) ui.answer(ROF);
 
-    if (ui.update("cof")) ui.answer(WR.ShotCount1);
+    if (ui.update("cof")) ui.answer(WR.shotCount);
 
-    if (ui.update("cow")) ui.answer(WR.WriteCount);
+    if (ui.update("cow")) ui.answer(WR.writeCount);
 
-    if (ui.update("vol")) ui.answer(ResVoltValue, 2);
+    if (ui.update("vol")) ui.answer(resVoltValue, 2);
 
-    if (ui.update("pr")) ui.answer(ProcVol);
+    if (ui.update("pr")) ui.answer(procVol);
 
-    if (ui.update("vo")) ui.answer(Settings.Shot_time);
+    if (ui.update("vo")) ui.answer(Settings.shotTime);
 
-    if (ui.update("vc")) ui.answer(Settings.Shot_wait);
+    if (ui.update("vc")) ui.answer(Settings.shotWait);
 
-    if (ui.update("sf")) ui.answer(Settings.NumOfShotsSemi);
+    if (ui.update("sf")) ui.answer(Settings.numOfShotsSemi);
 
-    if (ui.update("sa")) ui.answer(Settings.NumOfShotsAuto);
+    if (ui.update("sa")) ui.answer(Settings.numOfShotsAuto);
 
-    if (ui.update("na")) ui.answer(Settings.TimeLastShot);
+    if (ui.update("na")) ui.answer(Settings.timeLastShot);
 
     if (ui.update("led1")) ui.answer(safetyState);
 

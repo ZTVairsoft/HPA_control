@@ -1,13 +1,13 @@
 void Volt() {
-  VoltValue = analogRead(A0);  //данные с аналогового пина
-  float voltage = VoltValue * (Settings.VoltCorr / 1023.0);
-  ResVoltValue = voltage * (Settings.DIV_R1 + Settings.DIV_R2) / Settings.DIV_R2;  //преобразуем согласно корректировки делителя
+  voltValue = analogRead(A0);  //данные с аналогового пина
+  float voltage = voltValue * (Settings.voltCorr / 1023.0);
+  resVoltValue = voltage * (Settings.divR1 + Settings.divR2) / Settings.divR2;  //преобразуем согласно корректировки делителя
   if (Settings.batType == 0) {
-    ProcVol = voltageToPercentage2S(ResVoltValue);  //Преобразуем в проценты из расчета на 2S аккум
+    procVol = voltageToPercentage2S(resVoltValue);  //Преобразуем в проценты из расчета на 2S аккум
   } else if (Settings.batType == 1) {
-    ProcVol = voltageToPercentage3S(ResVoltValue);  //Преобразуем в проценты из расчета на 3S аккум
+    procVol = voltageToPercentage3S(resVoltValue);  //Преобразуем в проценты из расчета на 3S аккум
   }
-  VoltTime = millis();
+  voltTime = millis();
 }
 
 float voltageToPercentage2S(float voltage) {
@@ -16,7 +16,7 @@ float voltageToPercentage2S(float voltage) {
 
   if (voltage >= voltageLevels[0]) return 100.0;
   if (voltage <= voltageLevels[7]) {
-    if (Settings.batSafe == true) batSafeFlag == true;
+    if (Settings.isBatSafe == true) isBatSafeFlag == true;
     return 0.0;
   }
 
@@ -36,7 +36,7 @@ float voltageToPercentage3S(float voltage) {
 
   if (voltage >= voltageLevels[0]) return 100.0;
   if (voltage <= voltageLevels[7]) {
-    if (Settings.batSafe == true) {batSafeFlag = true;}
+    if (Settings.isBatSafe == true) {isBatSafeFlag = true;}
     return 0.0;
   }
 
