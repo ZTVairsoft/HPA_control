@@ -56,7 +56,9 @@ void setup() {
   pinMode(FIREMODESW, INPUT);
   pinMode(TRACER, OUTPUT);
   
-  pinMode(PROGSAFE, INPUT);
+  if (Settings.isSWProgSafe){
+    pinMode(PROGSAFE, INPUT);
+  }
 
   if (Settings.isTracer == 1) {
     digitalWrite(TRACER, HIGH);

@@ -26,8 +26,12 @@ void loop() {
   }
 
   triggerState = digitalRead(TRIGPIN) ^ Settings.convTrig;
-  safetyState = digitalRead(PROGSAFE) ^ Settings.isConvSafe;
   autoModeState = digitalRead(FIREMODESW) ^ Settings.convSel;
+  if (Settings.isSWProgSafe) {
+    safetyState = digitalRead(PROGSAFE) ^ Settings.isConvSafe;
+  } else {
+    safetyState = false;
+  }
 
   deepSleepTime = Settings.deepSleepMin * 1000 * 60;  //время до ухода в сон
 

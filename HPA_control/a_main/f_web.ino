@@ -33,16 +33,20 @@ void build() {
       M_BOX(GP.LABEL("мс"); GP.BUTTON_MINI("bkwD", "◄"); GP.SLIDER("vd", Settings.shotDelay, 0, 1000); GP.BUTTON_MINI("frwD", "►");); GP.BREAK();
       GP.LABEL("Выстрелов в минуту: ");
       GP.LABEL_BLOCK("NAN", "rof"); GP.BREAK();
-      M_BOX(GP.SWITCH("CvTr", Settings.convTrig); GP.LABEL("инверт. спуск"););
-      M_BOX(GP.SWITCH("CvFM", Settings.convSel); GP.LABEL("инверт. переключ. огня"););
-      M_BOX(GP.SWITCH("CvSf", Settings.isConvSafe); GP.LABEL("инверт. предохранитель"););
+      M_BOX(GP.SWITCH("CvTr", Settings.convTrig); GP.LED("led3"); GP.LABEL("инверт. спуск"););
+      M_BOX(GP.SWITCH("CvFM", Settings.convSel); GP.LED("led2"); GP.LABEL("инверт. переключ. огня"););
+      M_BOX(GP.SWITCH("CvSf", Settings.isConvSafe); GP.LED("led1"); GP.LABEL("инверт. предохранитель"););
+      M_BOX(GP.SWITCH("SOPS", Settings.isSWProgSafe); GP.LABEL("вкл. электр. предохр."););
       M_BOX(GP.SWITCH("TWF", Settings.isDoubleShot); GP.LABEL("двойной спуск для CQB"););
       GP.BREAK();
+      /*
       M_SPOILER(
         "Состояние кнопок",
         M_BOX(GP.LED("led1"); GP.LABEL("предохранитель: "); GP.BREAK(););
         M_BOX(GP.LED("led2"); GP.LABEL("режим огня: "); GP.BREAK(););
-        M_BOX(GP.LED("led3"); GP.LABEL("спуск. крючек: "); GP.BREAK(););););
+        M_BOX(GP.LED("led3"); GP.LABEL("спуск. крючек: "); GP.BREAK();););
+        */        
+        );
 
     M_BLOCK_THIN_TAB(
       "Ограничения",
@@ -143,7 +147,7 @@ void build() {
     GP.BREAK();
     GP.UI_LINK("https://github.com/ZTVairsoft/HPA_control/releases", "Релизы BIN");
 
-  }else if (ui.uri("/update")) {
+  }else if (ui.uri("/ota_update")) {
   }
 
   GP.UI_END();
@@ -198,6 +202,9 @@ void action() {
     }
 
     if (ui.clickBool("CvSf", Settings.isConvSafe)) {
+    }
+
+    if (ui.clickBool("SOPS", Settings.isSWProgSafe)) {
     }
 
     if (ui.clickBool("TWF", Settings.isDoubleShot)) {
