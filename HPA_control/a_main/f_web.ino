@@ -1,7 +1,4 @@
 void build() {
-  //здесь 2 цикла в build создаем страничку, а в action отрабатываем нажатия
-  //можно сориентироваться смотря на страничку и сопоставляя с кодом в build
-
   GP.BUILD_BEGIN();
   GP.THEME(GP_DARK);
   //GP.THEME(GP_LIGHT);
